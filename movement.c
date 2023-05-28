@@ -6,6 +6,8 @@
 void draw(char c);
 void draw_play_area(int X, int Y);
 void handle_input(int* x, int* y, char* c);
+void move_char(int* x, int* y, direction dir);
+void calculate_movement(int* x, int* y, int* x_new, int* y_new, direction dir);
 WINDOW* init_curses_window();
 
 /* Global */
@@ -52,8 +54,6 @@ WINDOW* init_curses_window() {
 void draw(char c) {
   delch();
   insch(c);
-  refresh();
-
   return;
 }
 
@@ -63,20 +63,16 @@ void draw_play_area(int X, int Y) {
   /* Draw walls of play area */
   move(0, 0);
   for (y = 0; y <= Y; y++) {
-    if (y == 0 || y == Y) {
-      c = '=';
-      for (x = 0; x <= X; x++) {
-        move(y, x);
-        draw(c);
+    for (x = 0; x <= X; x++) {
+      if (y == 0 || y == Y) {
+        c = '=';
       }
-    }
-    else {
-      c = '|';
-      x = 0;
-      move(y, x);
-      draw(c);
-      
-      x = X;
+      else if (x == 0 || x == X) {
+        c = '|';
+      }
+      else {
+        c = '.';
+      }
       move(y, x);
       draw(c);
     }
@@ -88,8 +84,6 @@ void draw_play_area(int X, int Y) {
 }
 
 void handle_input(int* x, int* y, char* c) {
-  int x_new = *x;
-  int y_new = *y;
   direction dir = NONE;
   switch(*c) {
     case 'h': /* LEFT */
@@ -122,9 +116,81 @@ void handle_input(int* x, int* y, char* c) {
       move(*y, *x);
   }
 
+  if (dir != NONE) move_char(x, y, dir);
 
+  /*
   move(*y, *x);
   delch();
   insch(*c);
+  */
+
+  return;
+}
+
+
+void move_char(int* x, int* y, direction dir) {
+  /* Calculate movement */
+  int* x_new;
+  int* y_new;
+  calculate_movement(x, y, x_new, y_new, dir);
+
+  bool movement_is_valid = true;
+  /* TODO: Decide if movement is valid */
+
+  /* Make movement */
+  if (movement_is_valid) {
+    move(*y, *x);
+    draw('.');
+    move(*y_new, *x_new);
+    draw('@');
+
+    *x = *x_new;
+    *y = *y_new;
+  }
+
+  return;
+}
+
+
+void calculate_movement(int* x, int* y, int* x_new, int* y_new, direction dir) {
+  *x_new = *x;
+  *y_new = *y;
+  int SPEED = 1;
+
+  switch(dir) {
+    case LEFT:
+      *x_new = *x - SPEED;
+      *y_new = *y;
+      break;
+    case RIGHT:
+      *x_new = *x + SPEED;
+      *y_new = *y;
+      break;
+    case UP:
+      *x_new = *x;
+      *y_new = *y - SPEED;
+      break;
+    case DOWN:
+      *x_new = *x;
+      *y_new = *y + SPEED;
+      break;
+    case UPLEFT:
+      *x_new = *x - SPEED;
+      *y_new = *y - SPEED;
+      break;
+    case DOWNLEFT:
+      *x_new = *x - SPEED;
+      *y_new = *y + SPEED;
+      break;
+    case UPRIGHT:
+      *x_new = *x + SPEED;
+      *y_new = *y - SPEED;
+      break;
+    case DOWNRIGHT:
+      *x_new = *x + SPEED;
+      *y_new = *y + SPEED;
+      break;
+  }
+
   return;
 }
