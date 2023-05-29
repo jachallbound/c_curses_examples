@@ -3,15 +3,18 @@
 #include "data_structures.h"
 
 /* Declarations */
+WINDOW* init_curses_window();
 void draw(char c);
 void draw_play_area(int X, int Y);
-void handle_input(int* x, int* y, char* c);
-void move_char(int* x, int* y, direction dir);
-void calculate_movement(int* x, int* y, int* x_new, int* y_new, direction dir);
-WINDOW* init_curses_window();
+void handle_input(position* xy, char* c);
+void move_char(position* xy, direction dir);
+void calculate_movement(position* xy, position* xy_new, direction dir);
+bool validate_movement(position* xy);
+void debug(position xy, char* msg);
 
 /* Global */
 WINDOW *wnd;
+state game_state = RUNNING;
 int X = 0, Y = 0;
 
 /* Main */
@@ -27,15 +30,22 @@ int main(int argc, char** argv) {
   X = (term_X < X ? term_X : X); /* Reduce X,Y to terminal size if too large */
   Y = (term_Y < Y ? term_Y : Y);
 
+  /* Draw play area and set cursor to 1,1 */
   draw_play_area(X, Y);
   int x = getcurx(wnd);
   int y = getcury(wnd);
+  position xy;
+  xy.x = x;
+  xy.y = y;
 
-  while(1) {
+  /* Game loop */
+  while(game_state) {
+    /* Get input */
     c = getch();
-    if (c == 'q') break;
-    handle_input(&x, &y, &c);
+    handle_input(&xy, &c);
   }
+
+  /* Close curses */
   endwin();
   return 0;
 }
@@ -83,8 +93,9 @@ void draw_play_area(int X, int Y) {
   return;
 }
 
-void handle_input(int* x, int* y, char* c) {
+void handle_input(position* xy, char* c) {
   direction dir = NONE;
+  game_state = RUNNING;
   switch(*c) {
     case 'h': /* LEFT */
       dir = LEFT;
@@ -113,84 +124,105 @@ void handle_input(int* x, int* y, char* c) {
     case ' ': /* Select */
       move(Y/2, X+1);
       winsnstr(wnd, "This is a test\n", 32);
-      move(*y, *x);
+      move(xy->y, xy->x);
+      break;
+    case 'q': /* Quit */
+      game_state = ENDING;
   }
 
-  if (dir != NONE) move_char(x, y, dir);
-
-  /*
-  move(*y, *x);
-  delch();
-  insch(*c);
-  */
-
+  if (dir != NONE) {
+    debug(*xy, "Moving character\n");
+    move_char(xy, dir);
+  }
+  
   return;
 }
 
 
-void move_char(int* x, int* y, direction dir) {
+void move_char(position* xy, direction dir) {
   /* Calculate movement */
-  int* x_new;
-  int* y_new;
-  calculate_movement(x, y, x_new, y_new, dir);
+  position xy_new;
+  xy_new.x = xy->x;
+  xy_new.y = xy->y;
+  calculate_movement(xy, &xy_new, dir);
 
-  bool movement_is_valid = true;
-  /* TODO: Decide if movement is valid */
+  /* Validate movement */
+  bool movement_is_valid = validate_movement(&xy_new);
 
   /* Make movement */
   if (movement_is_valid) {
-    move(*y, *x);
+    /* Redraw floor where we previously were */
+    move(xy->y, xy->x);
     draw('.');
-    move(*y_new, *x_new);
+    /* Draw where we are now */
+    move(xy_new.y, xy_new.x);
     draw('@');
-
-    *x = *x_new;
-    *y = *y_new;
+    /* Update our position */
+    xy->x = xy_new.x;
+    xy->y = xy_new.y;
   }
 
   return;
 }
 
 
-void calculate_movement(int* x, int* y, int* x_new, int* y_new, direction dir) {
-  *x_new = *x;
-  *y_new = *y;
+void calculate_movement(position* xy, position* xy_new, direction dir) {
   int SPEED = 1;
 
   switch(dir) {
     case LEFT:
-      *x_new = *x - SPEED;
-      *y_new = *y;
+      xy_new->x = xy->x - SPEED;
+      xy_new->y = xy->y;
       break;
     case RIGHT:
-      *x_new = *x + SPEED;
-      *y_new = *y;
+      xy_new->x = xy->x + SPEED;
+      xy_new->y = xy->y;
       break;
     case UP:
-      *x_new = *x;
-      *y_new = *y - SPEED;
+      xy_new->x = xy->x;
+      xy_new->y = xy->y - SPEED;
       break;
     case DOWN:
-      *x_new = *x;
-      *y_new = *y + SPEED;
+      xy_new->x = xy->x;
+      xy_new->y = xy->y + SPEED;
       break;
     case UPLEFT:
-      *x_new = *x - SPEED;
-      *y_new = *y - SPEED;
+      xy_new->x = xy->x - SPEED;
+      xy_new->y = xy->y - SPEED;
       break;
     case DOWNLEFT:
-      *x_new = *x - SPEED;
-      *y_new = *y + SPEED;
+      xy_new->x = xy->x - SPEED;
+      xy_new->y = xy->y + SPEED;
       break;
     case UPRIGHT:
-      *x_new = *x + SPEED;
-      *y_new = *y - SPEED;
+      xy_new->x = xy->x + SPEED;
+      xy_new->y = xy->y - SPEED;
       break;
     case DOWNRIGHT:
-      *x_new = *x + SPEED;
-      *y_new = *y + SPEED;
+      xy_new->x = xy->x + SPEED;
+      xy_new->y = xy->y + SPEED;
+      break;
+    case NONE:
+      xy_new->x = xy->x;
+      xy_new->y = xy->y;
       break;
   }
 
+  return;
+}
+
+bool validate_movement(position* xy) {
+  if ((xy->x > 0 && xy->x < X && xy->y > 0 && xy->y < Y))
+    return true;
+  else
+    return false;
+}
+
+
+void debug(position xy, char* msg) {
+  int buf_len = 64;
+  move(Y/2, X+1);
+  winsnstr(wnd, msg, buf_len);
+  move(xy.y, xy.x);
   return;
 }

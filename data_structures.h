@@ -15,10 +15,19 @@ typedef enum direction {
   NONE = '.',
 } direction;
 
-typedef struct cell {
+typedef struct position {
   int x;
   int y;
+} position;
+
+typedef struct cell {
+  position xy;
   bool ISWALL;
 } cell;
+
+typedef enum state {
+  ENDING = 0,
+  RUNNING = 1,
+} state;
 
 #endif /* DATA_STRUCTURES_H */
