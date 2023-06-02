@@ -1,36 +1,4 @@
-#include "movement.h"
-
-void draw(char c) {
-  delch();
-  insch(c);
-  return;
-}
-
-void draw_play_area(int X, int Y) {
-  int x = 0, y = 0;
-  char c;
-  /* Draw walls of play area */
-  move(0, 0);
-  for (y = 0; y <= Y; y++) {
-    for (x = 0; x <= X; x++) {
-      if (y == 0 || y == Y) {
-        c = '=';
-      }
-      else if (x == 0 || x == X) {
-        c = '|';
-      }
-      else {
-        c = '.';
-      }
-      move(y, x);
-      draw(c);
-    }
-  }
-  /* Reset position within walls we just drew */
-  move(1, 1);
-
-  return;
-}
+#include "keyboard_input.h"
 
 void handle_input(WINDOW* wnd, position* xy, char* c) {
   direction dir = NONE;
@@ -70,13 +38,12 @@ void handle_input(WINDOW* wnd, position* xy, char* c) {
   }
 
   if (dir != NONE) {
-    debug(wnd, *xy, "Moving character\n");
+    display_message(wnd, *xy, "Moving character\n");
     move_char(xy, dir);
   }
   
   return;
 }
-
 
 void move_char(position* xy, direction dir) {
   /* Calculate movement */
@@ -103,7 +70,6 @@ void move_char(position* xy, direction dir) {
 
   return;
 }
-
 
 void calculate_movement(position* xy, position* xy_new, direction dir) {
   int SPEED = 1;
@@ -155,13 +121,4 @@ bool validate_movement(position* xy) {
     return true;
   else
     return false;
-}
-
-
-void debug(WINDOW* wnd, position xy, char* msg) {
-  int buf_len = 64;
-  move(Y/2, X+1);
-  winsnstr(wnd, msg, buf_len);
-  move(xy.y, xy.x);
-  return;
 }
