@@ -4,7 +4,7 @@ WFLAGS=-Wall
 CFLAGS=
 LDFLAGS=-lm -lcurses
 PROGRAM=main
-PFLAGS=-pg # Profiler flags
+PFLAGS=-pg -g # Profiler flags
 SRC=$(wildcard *.c)
 OBJ=$(patsubst %.c, %.o, $(SRC))
 
