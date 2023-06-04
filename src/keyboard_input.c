@@ -2,7 +2,7 @@
 
 void handle_input(WINDOW* wnd, position* xy, char* c) {
   direction dir = NONE;
-  game_state = RUNNING;
+  game_state = GET_INPUT;
   switch(*c) {
     case 'h': /* LEFT */
       dir = LEFT;
