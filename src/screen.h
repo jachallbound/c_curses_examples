@@ -3,13 +3,11 @@
 
 #include <curses.h>
 #include <ctype.h>
+#include <unistd.h>
 
 #include "data_structures.h"
 #include "data_input.h"
 #include "keyboard_input.h"
-
-/* Global */
-extern int X, Y;
 
 /* Declarations */
 void draw(char c);
