@@ -15,7 +15,7 @@ extern int X, Y;
 void draw(char c);
 void draw_at_position(char c, position xyz);
 void display_message(WINDOW* wnd, position xy, char* msg);
-int draw_map(cell* map_cells, size_t map_length);
+state change_map(map_s* map, position* xy);
 
 /* Depricated */
 void draw_play_area(int X, int Y);
