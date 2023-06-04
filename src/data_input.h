@@ -4,15 +4,18 @@
 #include <curses.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include "data_structures.h"
 #include "screen.h"
 #include "keyboard_input.h"
 
 /* Declarations */
-size_t load_map_characters(char* new_map, char* map_characters);
-int convert_map_to_cells(char* map_characters, cell* map_cells, size_t map_length);
+size_t load_map_characters(char* new_map, char map_characters[MAX_X][MAX_Y]);
+int convert_map_to_cells(char map_characters[MAX_X][MAX_Y], map_s* map, size_t map_length);
+celltype decide_cell_type(char c);
 
 size_t fsize(const char* filename, size_t dtype);
 

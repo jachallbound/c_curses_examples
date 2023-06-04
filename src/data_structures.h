@@ -10,6 +10,8 @@
 #define MAX_MAP_SIZE MAX_X*MAX_Y
 
 /* Definitions */
+
+/* Keyboard Input */
 typedef enum direction {
   LEFT = 'h',
   RIGHT = 'l',
@@ -22,12 +24,14 @@ typedef enum direction {
   NONE = '.',
 } direction;
 
+/* Map Cells */
 typedef struct position {
   int x;
   int y;
 } position;
 
 typedef enum celltype {
+  UNKNOWN = -1,
   FLOOR = 0,
   WALL = 1,
   PED = 2,
@@ -41,9 +45,16 @@ typedef struct cell {
   celltype CELL_TYPE;
 } cell;
 
+typedef struct map_s {
+  cell cells[MAX_X][MAX_Y];
+  size_t width;
+  size_t height;
+} map_s;
+
+/* Game State */
 typedef enum state {
   ENDING = 0,
-  RUNNING = 1,
+  GET_INPUT = 1,
   CHANGING_MAP = 2,
   PAUSED = 3,
 } state;
