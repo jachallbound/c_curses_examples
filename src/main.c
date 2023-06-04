@@ -4,14 +4,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "data_structures.h"
-#include "data_input.h"
-#include "keyboard_input.h"
-#include "screen.h"
+#include "citt.h"
 
-/* Global */
+/* Initialize Global */
 state game_state = GET_INPUT;
 int X = 0, Y = 0;
+size_t n_entities = 0;
 
 /* Define possible map names */
 /* I don't like this, but I dislike C strings even more */
@@ -39,18 +37,37 @@ int main(int argc, char** argv) {
   X = (term_X < X ? term_X : X); /* Reduce X,Y to terminal size if too large */
   Y = (term_Y < Y ? term_Y : Y);
 
-  /* Load map from file and set state */
+  /* Initialize game data */
+  /* Map */
   char map_characters[MAX_X][MAX_Y];
   map_s map = {
     .width = 0,
     .height = 0,
   };
+  /* Entities */
+  entity entity_list[MAX_ENTITIES];
+
+  /* Load map from file and set state */
   size_t map_len = load_map_characters(MAP00, map_characters);
   convert_map_to_cells(map_characters, &map, map_len);
   game_state = CHANGING_MAP;
 
-  /* Old, Draw play area and set cursor to 1,1 */
-  // draw_play_area(X, Y);
+  entity pc = {
+    .what_i_am = PC,
+    .what_i_look_like = {
+      .CELL_TYPE = ENTITY,
+      .display = '@',
+      .priority = 100,
+      .xy = {
+        .x = 1,
+        .y = 1,
+      },
+    },
+    .where_i_was = map.cells[1][1],
+    .where_i_am = map.cells[1][1],
+    .what_i_am_doing = I_AM_STILL,
+  };
+  add_entity(&entity_list, pc, 0);
 
   /* Get starting cursor position */
   move(1, 1);
@@ -84,3 +101,16 @@ int main(int argc, char** argv) {
   endwin();
   return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+  /* Old, Draw play area and set cursor to 1,1 */
+  // draw_play_area(X, Y);
