@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "data_structures.h"
 #include "data_input.h"
@@ -9,11 +10,12 @@
 #include "screen.h"
 
 /* Global */
-state game_state = RUNNING;
+state game_state = GET_INPUT;
 int X = 0, Y = 0;
 
 /* Define possible map names */
-char* MAP00 = "sr/data/map00.dat";
+/* I don't like this, but I dislike C strings even more */
+char* MAP00 = "src/data/map00.dat";
 char* MAP01 = "src/data/map01.dat";
 char* MAP02 = "src/data/map02.dat";
 char* MAP03 = "src/data/map03.dat";
@@ -27,7 +29,6 @@ int main(int argc, char** argv) {
   clear(); /* curses call to clear screen, send cursor to position (0,0) */
   refresh(); /* curses call to implement all changes since last refresh */
 
-
   int term_X = 0, term_Y = 0;
   char c;
   
@@ -39,26 +40,20 @@ int main(int argc, char** argv) {
   Y = (term_Y < Y ? term_Y : Y);
 
   /* Load map from file and set state */
-  char map_characters[MAX_MAP_SIZE];
-  cell map_cells[MAX_X][MAX_Y];
-  size_t map_file_length = load_map_characters(MAP00, map_characters);
-  if (map_file_length == 0) {
-    perror("Map was not loaded from file");
-    endwin();
-    return -1;
-  }
-  int map_conversion_status = convert_map_to_cells(map_characters, map_cells, map_file_length);
-  if (map_conversion_status < 0) { 
-    perror("Failed to convert map characters to cells");
-    endwind();
-    return -1;
-  }
-
+  char map_characters[MAX_X][MAX_Y];
+  map_s map = {
+    .width = 0,
+    .height = 0,
+  };
+  size_t map_len = load_map_characters(MAP00, map_characters);
+  convert_map_to_cells(map_characters, &map, map_len);
+  game_state = CHANGING_MAP;
 
   /* Old, Draw play area and set cursor to 1,1 */
-  draw_play_area(X, Y);
+  // draw_play_area(X, Y);
 
   /* Get starting cursor position */
+  move(1, 1);
   int x = getcurx(wnd);
   int y = getcury(wnd);
   position xy;
@@ -71,15 +66,15 @@ int main(int argc, char** argv) {
       case ENDING:
         /* Game will end */
         break;
-      case RUNNING:
+      case GET_INPUT:
       case PAUSED:
         /* Get input */
         c = getch();
         handle_input(wnd, &xy, &c);
         break;
       case CHANGING_MAP:
-
-        game_state = RUNNING;
+        /* Change map */
+        game_state = change_map(&map, &xy);
         break;
     }
     
