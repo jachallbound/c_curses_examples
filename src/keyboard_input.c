@@ -1,6 +1,6 @@
 #include "keyboard_input.h"
 
-void handle_input(WINDOW* wnd, position* xy, char* c) {
+void handle_input(WINDOW* wnd, map_s* map, position* xy, char* c) {
   direction dir = NONE;
   game_state = GET_INPUT;
   switch(*c) {
@@ -29,16 +29,14 @@ void handle_input(WINDOW* wnd, position* xy, char* c) {
       dir = DOWNRIGHT;
       break;
     case ' ': /* Select */
-      move(Y/2, X+1);
-      winsnstr(wnd, "This is a test\n", 32);
-      move(xy->y, xy->x);
+      display_message(wnd, map, *xy, "This is a test\n");
       break;
     case 'q': /* Quit */
       game_state = ENDING;
   }
 
   if (dir != NONE) {
-    display_message(wnd, *xy, "Moving character\n");
+    display_message(wnd, map, *xy, "Moving character\n");
     move_char(xy, dir);
   }
   

@@ -8,7 +8,7 @@
 #include "screen.h"
 
 /* Declarations */
-void handle_input(WINDOW* wnd, position* xy, char* c);
+void handle_input(WINDOW* wnd, map_s* map, position* xy, char* c);
 
 
 #endif /* KEYBOARD_INPUT_H */
