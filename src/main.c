@@ -20,12 +20,13 @@ char* MAP03 = "src/data/map03.dat";
 char* MAP04 = "src/data/map04.dat";
 
 /* Main */
-int main(int argc, char** argv) {
+int main(void /* int argc, char** argv */) {
   WINDOW* wnd = initscr(); /* curses call to initialize window */
   cbreak(); /* curses call to set no waiting for Enter key */
   noecho(); /* curses call to set no echoing */
   clear(); /* curses call to clear screen, send cursor to position (0,0) */
   refresh(); /* curses call to implement all changes since last refresh */
+  curs_set(0);
 
   int term_X = 0, term_Y = 0;
   char c;
@@ -48,8 +49,8 @@ int main(int argc, char** argv) {
   entity entity_list[MAX_ENTITIES];
 
   /* Load map from file and set state */
-  size_t map_len = load_map_characters(MAP00, map_characters);
-  convert_map_to_cells(map_characters, &map, map_len);
+  load_map_characters(MAP00, map_characters);
+  convert_map_to_cells(map_characters, &map);
   game_state = CHANGING_MAP;
 
   entity pc = {
@@ -67,10 +68,10 @@ int main(int argc, char** argv) {
     .where_i_am = map.cells[1][1],
     .what_i_am_doing = I_AM_STILL,
   };
-  add_entity(&entity_list, pc, 0);
+  add_entity(entity_list, &pc, 0);
 
   /* Get starting cursor position */
-  move(1, 1);
+  move(10, 10);
   int x = getcurx(wnd);
   int y = getcury(wnd);
   position xy;
@@ -87,7 +88,7 @@ int main(int argc, char** argv) {
       case PAUSED:
         /* Get input */
         c = getch();
-        handle_input(wnd, &xy, &c);
+        handle_input(wnd, &map, &xy, &c);
         break;
       case CHANGING_MAP:
         /* Change map */
