@@ -37,8 +37,8 @@ size_t load_map_characters(char* new_map, char map_characters[MAX_X][MAX_Y]) {
   return map_len;
 }
 
-int convert_map_to_cells(char map_characters[MAX_X][MAX_Y], map_s* map, size_t map_length) {
-  int x = 0, y = 0;
+int convert_map_to_cells(char map_characters[MAX_X][MAX_Y], map_s* map) {
+  size_t x = 0, y = 0;
 
   for (y = 0; y < MAX_Y; y++) {
     for (x = 0; x < MAX_X; x++) {
