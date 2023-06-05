@@ -3,6 +3,7 @@
 void draw(char c) {
   delch();
   insch(c);
+  refresh();
   return;
 }
 
@@ -11,9 +12,9 @@ void draw_at_position(char c, position xyz) {
   return;
 }
 
-void display_message(WINDOW* wnd, position xy, char* msg) {
+void display_message(WINDOW* wnd, map_s* map, position xy, char* msg) {
   int buf_len = 1024;
-  move(Y/2, X+1);
+  move(map->height/2, map->width+1);
   winsnstr(wnd, msg, buf_len);
   move(xy.y, xy.x);
   return;
@@ -22,11 +23,13 @@ void display_message(WINDOW* wnd, position xy, char* msg) {
 state change_map(map_s* map, position* cur_pos) {
   /* Right now, just drop the map */
   size_t x = 0, y = 0;
+  
   for (y = 0; y <= map->height; y++) {
     for (x = 0; x <= map->width; x++) {
       move(map->cells[x][y].xy.y,map->cells[x][y].xy.x);
       draw(map->cells[x][y].display);
     }
+    msleep(50);
   }
   move(cur_pos->y, cur_pos->x);
   return GET_INPUT;
@@ -57,4 +60,25 @@ void draw_play_area(int X, int Y) {
   move(1, 1);
 
   return;
+}
+
+
+/* Sleep function */
+int msleep(long msec) {
+  struct timespec ts;
+  int res;
+
+  if (msec < 0) {
+    errno = EINVAL;
+    return -1;
+  }
+
+  ts.tv_sec = msec / 1000;
+  ts.tv_nsec = (msec % 1000) * 1000000;
+
+  do {
+    res = nanosleep(&ts, &ts);
+  } while (res && errno == EINTR);
+
+  return res;
 }
