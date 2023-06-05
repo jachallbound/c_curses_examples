@@ -9,6 +9,7 @@
 #include "screen.h"
 
 void calculate_movement(position* xy, position* xy_new, direction dir);
+void add_entity(entity* entity_list, entity* new_entity, size_t index);
 
 
 /* Depricated */
