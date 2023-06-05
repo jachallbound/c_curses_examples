@@ -1,7 +1,7 @@
 CC=gcc
 STDFLAGS=-std=c99
-WFLAGS=-Wall
-CFLAGS=
+WFLAGS=-Wall -Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition -Wextra
+CFLAGS=-D_POSIX_C_SOURCE=199309L
 LDFLAGS=-lm -lcurses
 PROGRAM=main
 PFLAGS=-pg -g # Profiler flags
