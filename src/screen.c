@@ -11,7 +11,6 @@ void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
   size_t x = 0, y = 0, e = 0;
   char c = ' ';
   entity_s entity;
-  FILE *f = fopen("output.txt", "w");
   for (y = 0; y <= map->height; y++) {
     for (x = 0; x <= map->width; x++) {
       move(map->cells[x][y].y, map->cells[x][y].x);
