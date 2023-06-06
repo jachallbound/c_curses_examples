@@ -11,6 +11,7 @@ void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
   size_t x = 0, y = 0, e = 0;
   char c = ' ';
   entity_s entity;
+  FILE *f = fopen("output.txt", "w");
   for (y = 0; y <= map->height; y++) {
     for (x = 0; x <= map->width; x++) {
       move(map->cells[x][y].y, map->cells[x][y].x);
@@ -18,10 +19,10 @@ void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
       for (e = 0; e < entity_count; e++) {
         if (entity_list[0].where_i_am.x == x && entity_list[0].where_i_am.y == y) {
           entity = entity_list[0];
+          if (entity.what_i_look_like.priority > map->cells[x][y].priority) {
+            c = entity.what_i_look_like.display;
+          }
         }
-      }
-      if (entity.what_i_look_like.priority > map->cells[x][y].priority) {
-        c = entity.what_i_look_like.display;
       }
       draw(c);
     }
