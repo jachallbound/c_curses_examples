@@ -48,8 +48,8 @@ int convert_map_to_cells(char map_characters[MAX_X][MAX_Y], map_s* map) {
           map->height++;
           break;
         default:
-          map->cells[x][y].xy.x = x;
-          map->cells[x][y].xy.y = y;
+          map->cells[x][y].x = x;
+          map->cells[x][y].y = y;
           map->cells[x][y].display = map_characters[x][y];
           map->cells[x][y].priority = 0;
           map->cells[x][y].CELL_TYPE = decide_cell_type(map_characters[x][y]);

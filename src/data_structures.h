@@ -41,7 +41,8 @@ typedef enum celltype {
 } celltype;
 
 typedef struct cell {
-  position xy;
+  size_t x;
+  size_t y;
   char display;
   int priority;
   celltype CELL_TYPE;
@@ -55,24 +56,31 @@ typedef struct map_s {
 
 
 /* Entities */
-typedef enum action {
+typedef enum entity_action {
   I_AM_STILL,
   I_AM_MOVING,
   I_AM_FIGHTING,
-} action;
+} entity_action;
 
-typedef enum entitytype {
-  PC,
-  NPC,
-} entitytype;
+typedef enum entity_type {
+  PC, /* Player Character */
+  NPC, /* Non-Player Character */
+} entity_type;
 
-typedef struct entity {
-  entitytype what_i_am;
+typedef enum visibility {
+  VISIBLE = 0,
+  INVISIBLE = 1,
+  SHROUDED = 2,
+} visibility;
+
+typedef struct entity_s {
+  entity_type what_i_am;
   cell what_i_look_like;
   cell where_i_was;
   cell where_i_am;
-  action what_i_am_doing;
-} entity;
+  cell where_i_will_be;
+  entity_action what_i_am_doing;
+} entity_s;
 
 
 /* Game State */
@@ -86,8 +94,8 @@ typedef enum state {
 
 
 /* Global */
-extern size_t n_entities;
 extern int X, Y;
 extern state game_state;
+extern size_t new_entity_index, entity_count;
 
 #endif /* DATA_STRUCTURES_H */
