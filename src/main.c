@@ -9,7 +9,8 @@
 /* Initialize Global */
 state game_state = GET_INPUT;
 int X = 0, Y = 0;
-size_t n_entities = 0;
+size_t new_entity_index = 0;
+size_t entity_count = 0;
 
 /* Define possible map names */
 /* I don't like this, but I dislike C strings even more */
@@ -45,38 +46,38 @@ int main(void /* int argc, char** argv */) {
     .width = 0,
     .height = 0,
   };
-  /* Entities */
-  entity entity_list[MAX_ENTITIES];
 
   /* Load map from file and set state */
   load_map_characters(MAP00, map_characters);
   convert_map_to_cells(map_characters, &map);
   game_state = CHANGING_MAP;
 
-  entity pc = {
+  /* Entities */
+  entity_s entity_list[MAX_ENTITIES];
+  /* Generature player character */
+  entity_s pc = {
     .what_i_am = PC,
     .what_i_look_like = {
       .CELL_TYPE = ENTITY,
       .display = '@',
       .priority = 100,
-      .xy = {
-        .x = 1,
-        .y = 1,
-      },
+      .x = 0, .y = 0, /* UNUSED */
     },
-    .where_i_was = map.cells[1][1],
-    .where_i_am = map.cells[1][1],
+    .where_i_was = map.cells[map.width/2][map.height/2],
+    .where_i_am = map.cells[map.width/2][map.height/2],
+    .where_i_will_be = map.cells[map.width/2][map.height/2],
     .what_i_am_doing = I_AM_STILL,
   };
-  add_entity(entity_list, &pc, 0);
+  /* Add player character to entity list */
+  add_entity(entity_list, &pc);
 
   /* Get starting cursor position */
-  move(10, 10);
+  /* move(10, 10);
   int x = getcurx(wnd);
   int y = getcury(wnd);
   position xy;
   xy.x = x;
-  xy.y = y;
+  xy.y = y; */
 
   /* Game loop */
   do {
@@ -88,14 +89,14 @@ int main(void /* int argc, char** argv */) {
       case PAUSED:
         /* Get input */
         c = getch();
-        handle_input(wnd, &map, &xy, &c);
+        handle_input(wnd, &map, entity_list, &c);
         break;
       case CHANGING_MAP:
         /* Change map */
-        game_state = change_map(&map, &xy);
+        game_state = change_map(&map, entity_list);
         break;
     }
-    
+    update_map(wnd, &map, entity_list);
   } while(game_state);
 
   /* Close curses */

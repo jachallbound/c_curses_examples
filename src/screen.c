@@ -7,31 +7,46 @@ void draw(char c) {
   return;
 }
 
-void draw_at_position(char c, position xyz) {
-
+void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
+  size_t x = 0, y = 0, e = 0;
+  char c = ' ';
+  entity_s entity;
+  for (y = 0; y <= map->height; y++) {
+    for (x = 0; x <= map->width; x++) {
+      move(map->cells[x][y].y, map->cells[x][y].x);
+      c = map->cells[x][y].display;
+      for (e = 0; e < entity_count; e++) {
+        if (entity_list[0].where_i_am.x == x && entity_list[0].where_i_am.y == y) {
+          entity = entity_list[0];
+        }
+      }
+      if (entity.what_i_look_like.priority > map->cells[x][y].priority) {
+        c = entity.what_i_look_like.display;
+      }
+      draw(c);
+    }
+  }
   return;
 }
 
-void display_message(WINDOW* wnd, map_s* map, position xy, char* msg) {
+void display_message(WINDOW* wnd, const map_s* map, char* msg) {
   int buf_len = 1024;
-  move(map->height/2, map->width+1);
+  move(map->height/2, map->width+2);
   winsnstr(wnd, msg, buf_len);
-  move(xy.y, xy.x);
   return;
 }
 
-state change_map(map_s* map, position* cur_pos) {
+state change_map(map_s* map, entity_s* entity_list) {
   /* Right now, just drop the map */
   size_t x = 0, y = 0;
   
   for (y = 0; y <= map->height; y++) {
     for (x = 0; x <= map->width; x++) {
-      move(map->cells[x][y].xy.y,map->cells[x][y].xy.x);
+      move(map->cells[x][y].y, map->cells[x][y].x);
       draw(map->cells[x][y].display);
     }
     msleep(50);
   }
-  move(cur_pos->y, cur_pos->x);
   return GET_INPUT;
 }
 

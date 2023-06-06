@@ -13,9 +13,10 @@
 
 /* Declarations */
 void draw(char c);
-void draw_at_position(char c, position xyz);
-void display_message(WINDOW* wnd, map_s* map, position xy, char* msg);
-state change_map(map_s* map, position* xy);
+void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list);
+void display_message(WINDOW* wnd, const map_s* map, char* msg);
+
+state change_map(map_s* map, entity_s* entity_list);
 
 /* Sleep function */
 int msleep(long msec);
