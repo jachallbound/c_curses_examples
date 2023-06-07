@@ -16,16 +16,16 @@ void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
     case 'j': /* DOWN */
       dir = DOWN;
       break;
-    case 'y': /* UPLEFT */
+    case 'u': /* UPLEFT */
       dir = UPLEFT;
       break;
-    case 'b': /* DOWNLEFT */
+    case 'n': /* DOWNLEFT */
       dir = DOWNLEFT;
       break;
-    case 'u': /* UPRIGHT */
+    case 'i': /* UPRIGHT */
       dir = UPRIGHT;
       break;
-    case 'n': /* DOWNRIGHT */
+    case 'm': /* DOWNRIGHT */
       dir = DOWNRIGHT;
       break;
     case ' ': /* Select */
@@ -37,7 +37,7 @@ void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
 
   if (dir != NONE) {
     display_message(wnd, map, "Moving character\n");
-    move_entity(wnd, map, &entity_list[0], dir);
+    move_entity(wnd, map, entity_list, &entity_list[0], dir);
   }
   
   return;
