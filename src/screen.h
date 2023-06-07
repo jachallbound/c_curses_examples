@@ -13,6 +13,7 @@
 
 /* Declarations */
 void draw(char c);
+void draw_xy(char c, size_t x, size_t y);
 void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list);
 void display_message(WINDOW* wnd, const map_s* map, char* msg);
 

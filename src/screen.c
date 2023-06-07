@@ -7,23 +7,28 @@ void draw(char c) {
   return;
 }
 
+void draw_xy(char c, size_t x, size_t y) {
+  move(y, x);
+  draw(c);
+  return;
+}
+
 void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
   size_t x = 0, y = 0, e = 0;
   char c = ' ';
-  entity_s entity;
-  for (y = 0; y <= map->height; y++) {
-    for (x = 0; x <= map->width; x++) {
-      move(map->cells[x][y].y, map->cells[x][y].x);
-      c = map->cells[x][y].display;
-      for (e = 0; e < entity_count; e++) {
-        if (entity_list[0].where_i_am.x == x && entity_list[0].where_i_am.y == y) {
-          entity = entity_list[0];
-          if (entity.what_i_look_like.priority > map->cells[x][y].priority) {
-            c = entity.what_i_look_like.display;
-          }
-        }
+
+  for (e = 0; e < entity_count; e++) {
+    if (entity_list[e].what_i_am_doing == I_AM_MOVING) {
+      /* Draw floor where I was */
+      x = entity_list[e].where_i_was.x;
+      y = entity_list[e].where_i_was.y;
+      draw_xy(map->cells[x][y].display, x, y);
+      /* Draw where I am, if display priority is high enough */
+      if (entity_list[e].what_i_look_like.priority > map->cells[x][y].priority) {
+        x = entity_list[e].where_i_am.x;
+        y = entity_list[e].where_i_am.y;
+        draw_xy(entity_list[e].what_i_look_like.display, x, y);
       }
-      draw(c);
     }
   }
   return;

@@ -23,11 +23,14 @@ void validate_movement(map_s* map, entity_s* entity) {
     case FLOOR: /* Cell type is floor, allow movement */
       entity->where_i_was = entity->where_i_am; /* Where I am is now where I was */
       entity->where_i_am = entity->where_i_will_be; /* Where I will be is now where I am */
+      entity->what_i_am_doing = I_AM_MOVING;
       break;
     case WALL: /* Cell type is wall, block movement */
       entity->where_i_will_be = entity->where_i_am; /* Where I am is still where I will be */
+      entity->what_i_am_doing = I_AM_STILL;
       break;
     case ENTITY: /* Cell type is entity, begin interaction */
+      entity->what_i_am_doing = I_AM_INTERACTING;
       break;
   }
   return;
