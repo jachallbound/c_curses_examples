@@ -71,14 +71,6 @@ int main(void /* int argc, char** argv */) {
   /* Add player character to entity list */
   add_entity(entity_list, &pc);
 
-  /* Get starting cursor position */
-  /* move(10, 10);
-  int x = getcurx(wnd);
-  int y = getcury(wnd);
-  position xy;
-  xy.x = x;
-  xy.y = y; */
-
   /* Game loop */
   do {
     switch (game_state) {

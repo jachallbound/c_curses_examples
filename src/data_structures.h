@@ -59,7 +59,7 @@ typedef struct map_s {
 typedef enum entity_action {
   I_AM_STILL,
   I_AM_MOVING,
-  I_AM_FIGHTING,
+  I_AM_INTERACTING,
 } entity_action;
 
 typedef enum entity_type {
