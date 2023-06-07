@@ -8,13 +8,27 @@ void add_entity(entity_s* entity_list, entity_s* new_entity) {
   return;
 }
 
-void move_entity(WINDOW* wnd, map_s* map, entity_s* entity, direction dir) {
-  calculate_movement(map, entity, dir);
-  validate_movement(map, entity);
+void entity_interaction(WINDOW* wnd, map_s* map, entity_s* entity_1, entity_s* entity_2) {
+  display_message(wnd, map, "Interacting with V\n");
   return;
 }
 
-void validate_movement(map_s* map, entity_s* entity) {
+void move_entity(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity, direction dir) {
+  calculate_movement(wnd, map, entity_list, entity, dir);
+  validate_movement(wnd, map, entity_list, entity);
+  return;
+}
+
+void validate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity) {
+  size_t e = 0;
+  for (e = 0; e < entity_count; e++) {
+    if (entity_list[e].where_i_am.x == entity->where_i_will_be.x && entity_list[e].where_i_am.y == entity->where_i_will_be.y) {
+      entity->where_i_will_be = entity->where_i_am;
+      entity->what_i_am_doing = I_AM_INTERACTING;
+      entity_interaction(wnd, map, entity, &entity_list[e]);
+      return; /* We are interacting, so don't check cell movement */
+    }
+  }
   switch (map->cells[entity->where_i_will_be.x][entity->where_i_will_be.y].CELL_TYPE) {
     case UNKNOWN: /* Cell type is unknown, fail program */
       perror("Riding aimlessly onward toward the UNKNOWN"); /* Credit: "Toward the Unknown" by Helstar */
@@ -29,14 +43,11 @@ void validate_movement(map_s* map, entity_s* entity) {
       entity->where_i_will_be = entity->where_i_am; /* Where I am is still where I will be */
       entity->what_i_am_doing = I_AM_STILL;
       break;
-    case ENTITY: /* Cell type is entity, begin interaction */
-      entity->what_i_am_doing = I_AM_INTERACTING;
-      break;
   }
   return;
 }
 
-void calculate_movement(map_s* map, entity_s* entity, direction dir) {
+void calculate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity, direction dir) {
   int SPEED = 1;
 
   switch(dir) {

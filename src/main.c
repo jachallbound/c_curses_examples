@@ -68,8 +68,22 @@ int main(void /* int argc, char** argv */) {
     .where_i_will_be = map.cells[map.width/2][map.height/2],
     .what_i_am_doing = I_AM_STILL,
   };
+  entity_s pc2 = {
+    .what_i_am = PC,
+    .what_i_look_like = {
+      .CELL_TYPE = ENTITY,
+      .display = 'V',
+      .priority = 1,
+      .x = 0, .y = 0, /* UNUSED */
+    },
+    .where_i_was = map.cells[map.width/3][map.height/3],
+    .where_i_am = map.cells[map.width/3][map.height/3],
+    .where_i_will_be = map.cells[map.width/3][map.height/3],
+    .what_i_am_doing = I_AM_STILL,
+  };
   /* Add player character to entity list */
   add_entity(entity_list, &pc);
+  add_entity(entity_list, &pc2);
 
   /* Game loop */
   do {

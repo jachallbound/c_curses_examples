@@ -10,11 +10,11 @@
 
 void add_entity(entity_s* entity_list, entity_s* new_entity);
 
-void move_entity(WINDOW* wnd, map_s* map, entity_s* entity, direction dir);
-void validate_movement(map_s* map, entity_s* entity);
-void calculate_movement(map_s* map, entity_s* entity, direction dir);
+void move_entity(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity, direction dir);
+void validate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity);
+void calculate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity, direction dir);
 
-void entity_interaction(entity_s* entity_1, entity_s* entity_2);
+void entity_interaction(WINDOW* wnd, map_s* map, entity_s* entity_1, entity_s* entity_2);
 
 /* Depricated */
 void move_char(position* xy, direction dir);
