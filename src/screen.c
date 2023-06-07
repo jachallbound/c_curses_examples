@@ -18,17 +18,17 @@ void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
   char c = ' ';
 
   for (e = 0; e < entity_count; e++) {
+    /* Draw where I am, if display priority is high enough */
+    x = entity_list[e].where_i_am.x;
+    y = entity_list[e].where_i_am.y;
+    if (entity_list[e].what_i_look_like.priority > map->cells[x][y].priority) {
+      draw_xy(entity_list[e].what_i_look_like.display, x, y);
+    }
     if (entity_list[e].what_i_am_doing == I_AM_MOVING) {
-      /* Draw floor where I was */
+      /* If I am moving, then draw floor where I was */
       x = entity_list[e].where_i_was.x;
       y = entity_list[e].where_i_was.y;
       draw_xy(map->cells[x][y].display, x, y);
-      /* Draw where I am, if display priority is high enough */
-      if (entity_list[e].what_i_look_like.priority > map->cells[x][y].priority) {
-        x = entity_list[e].where_i_am.x;
-        y = entity_list[e].where_i_am.y;
-        draw_xy(entity_list[e].what_i_look_like.display, x, y);
-      }
     }
   }
   return;
@@ -42,13 +42,12 @@ void display_message(WINDOW* wnd, const map_s* map, char* msg) {
 }
 
 state change_map(map_s* map, entity_s* entity_list) {
-  /* Right now, just drop the map */
+  /* Right now, just draw the map */
   size_t x = 0, y = 0;
   
   for (y = 0; y <= map->height; y++) {
     for (x = 0; x <= map->width; x++) {
-      move(map->cells[x][y].y, map->cells[x][y].x);
-      draw(map->cells[x][y].display);
+      draw_xy(map->cells[x][y].display, map->cells[x][y].x, map->cells[x][y].y);
     }
     msleep(50);
   }
