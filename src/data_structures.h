@@ -9,6 +9,7 @@
 #define MAX_Y 128
 #define MAX_MAP_SIZE MAX_X*MAX_Y
 #define MAX_ENTITIES 1024
+#define COMPARE_XY(e0,e1) (e0.x == e1.x && e0.y == e1.y)
 
 /* Definitions */
 
