@@ -8,8 +8,16 @@ void add_entity(entity_s* entity_list, entity_s* new_entity) {
   return;
 }
 
-void entity_interaction(WINDOW* wnd, map_s* map, entity_s* entity_1, entity_s* entity_2) {
-  display_message(wnd, map, "Interacting with V\n");
+void entity_interaction(WINDOW* wnd, map_s* map, entity_s* entity_0, entity_s* entity_1) {
+  char msg[128];
+  char c0[2]; c0[0] = entity_0->what_i_look_like.display; c0[1] = '\0'; /* I hate C strings */
+  char c1[2]; c1[0] = entity_1->what_i_look_like.display; c1[1] = '\0';
+  char interact_str[] = " interacts with ";
+  strcat(msg, c0);
+  strcat(msg, interact_str);
+  strcat(msg, c1);
+  strcat(msg, "\n");
+  display_message(wnd, map, msg);
   return;
 }
 
@@ -22,11 +30,12 @@ void move_entity(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entit
 void validate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity) {
   size_t e = 0;
   for (e = 0; e < entity_count; e++) {
-    if (entity_list[e].where_i_am.x == entity->where_i_will_be.x && entity_list[e].where_i_am.y == entity->where_i_will_be.y) {
+    if (COMPARE_XY(entity_list[e].where_i_am, entity->where_i_will_be)) { //(entity_list[e].where_i_am.x == entity->where_i_will_be.x && entity_list[e].where_i_am.y == entity->where_i_will_be.y) {
       entity->where_i_will_be = entity->where_i_am;
       entity->what_i_am_doing = I_AM_INTERACTING;
       entity_interaction(wnd, map, entity, &entity_list[e]);
       return; /* We are interacting, so don't check cell movement */
+              /* Returning here disallows multiple interactions, possibly change this */
     }
   }
   switch (map->cells[entity->where_i_will_be.x][entity->where_i_will_be.y].CELL_TYPE) {

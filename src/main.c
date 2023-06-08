@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "citt.h"
 
@@ -68,7 +69,7 @@ int main(void /* int argc, char** argv */) {
     .where_i_will_be = map.cells[map.width/2][map.height/2],
     .what_i_am_doing = I_AM_STILL,
   };
-  entity_s pc2 = {
+  entity_s pc1 = {
     .what_i_am = PC,
     .what_i_look_like = {
       .CELL_TYPE = ENTITY,
@@ -81,8 +82,22 @@ int main(void /* int argc, char** argv */) {
     .where_i_will_be = map.cells[map.width/3][map.height/3],
     .what_i_am_doing = I_AM_STILL,
   };
+  entity_s pc2 = {
+    .what_i_am = PC,
+    .what_i_look_like = {
+      .CELL_TYPE = ENTITY,
+      .display = 'S',
+      .priority = 1,
+      .x = 0, .y = 0, /* UNUSED */
+    },
+    .where_i_was = map.cells[map.width/4][map.height/4],
+    .where_i_am = map.cells[map.width/4][map.height/4],
+    .where_i_will_be = map.cells[map.width/4][map.height/4],
+    .what_i_am_doing = I_AM_STILL,
+  };
   /* Add player character to entity list */
   add_entity(entity_list, &pc);
+  add_entity(entity_list, &pc1);
   add_entity(entity_list, &pc2);
 
   /* Game loop */

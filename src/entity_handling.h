@@ -1,9 +1,9 @@
 #ifndef ENTITY_HANDLING_H
 #define ENTITY_HANDLING_H
 
-
 #include <curses.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "data_structures.h"
 #include "screen.h"
