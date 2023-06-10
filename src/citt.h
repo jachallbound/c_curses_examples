@@ -1,6 +1,9 @@
 #ifndef CITT_H
 #define CITT_H
 
+/* Config */
+#include "config.h"
+
 /* All CitT Libraries */
 #include "data_structures.h"
 #include "data_input.h"

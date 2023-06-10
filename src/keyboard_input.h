@@ -6,6 +6,7 @@
 
 #include "data_structures.h"
 #include "screen.h"
+#include "config.h"
 
 /* Declarations */
 void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c);
