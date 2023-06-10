@@ -50,8 +50,12 @@ state change_map(map_s* map, entity_s* entity_list) {
 
 /* Message functions */
 void display_message(WINDOW* wnd, const map_s* map, char* msg) {
-  size_t m = 0, m_max = 0;
+  FILE* f = fopen("userlog.txt", "a");
+  fprintf(f, "%s\n", msg);
+  fclose(f);
   
+  
+  size_t m = 0, m_max = 0;
   strncpy(msg_log[msg_count], msg, MAX_MSG_LENGTH);
   m_max = (msg_count > Y ? Y : msg_count);
   for(m = 0; m < m_max; m++) {
