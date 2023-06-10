@@ -11,9 +11,9 @@
 void add_entity(entity_s* entity_list, entity_s* new_entity);
 
 void move_entity(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity, direction dir);
-void validate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity);
-void report_movement(WINDOW* wnd, map_s* map, entity_s* entity);
 void calculate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity, direction dir);
+void validate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s* entity, direction dir);
+void report_movement(WINDOW* wnd, map_s* map, entity_s* entity, direction dir);
 
 void entity_interaction(WINDOW* wnd, map_s* map, entity_s* entity_1, entity_s* entity_2);
 

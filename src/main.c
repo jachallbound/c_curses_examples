@@ -13,11 +13,11 @@ int X = 0, Y = 0;
 size_t new_entity_index = 0;
 size_t entity_count = 0;
 size_t msg_count = 0;
-char msg_log[MAX_MSG_LENGTH][MAX_LOG_LENGTH];
+size_t rep_msg_count = 0;
+char msg_log[MAX_LOG_LENGTH][MAX_MSG_LENGTH];
 
 
 /* Define possible map names */
-/* I don't like this, but I dislike C strings even more */
 char* MAP00 = "src/data/map00.dat";
 char* MAP01 = "src/data/map01.dat";
 char* MAP02 = "src/data/map02.dat";
@@ -34,12 +34,12 @@ int main(void /* int argc, char** argv */) {
   curs_set(0);
   char c;
 
-  /* Initialize message log */
-  for(int XL = 0; XL < MAX_MSG_LENGTH; XL++) {
-    for(int YL = 0; YL < MAX_LOG_LENGTH; YL++) {
-      msg_log[XL][YL] = ' ';
-    }
-  }
+  // /* Initialize message log */
+  // for(int XL = 0; XL < MAX_MSG_LENGTH; XL++) {
+  //   for(int YL = 0; YL < MAX_LOG_LENGTH; YL++) {
+  //     msg_log[XL][YL] = ' ';
+  //   }
+  // }
   
   /* Find terminal size */
   getmaxyx(wnd, Y, X); /* curses call to find size of terminal window */
