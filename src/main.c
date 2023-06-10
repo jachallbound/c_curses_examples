@@ -73,7 +73,7 @@ int main(void /* int argc, char** argv */) {
   };
   entity_s pc1 = {
     .what_i_am = NPC,
-    .who_i_am.name = "Wicked one",
+    .who_i_am.name = "V",
     .what_i_look_like = {
       .CELL_TYPE = ENTITY,
       .display = 'V',
@@ -87,7 +87,7 @@ int main(void /* int argc, char** argv */) {
   };
   entity_s pc2 = {
     .what_i_am = NPC,
-    .who_i_am.name = "Sacristan",
+    .who_i_am.name = "S",
     .what_i_look_like = {
       .CELL_TYPE = ENTITY,
       .display = 'S',

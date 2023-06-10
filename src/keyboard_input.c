@@ -32,7 +32,7 @@ void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
       dir = WAIT;
       break;
     case SELECT_KEY: /* Select */
-      display_message(wnd, map, "This is a test\n");
+      display_message(wnd, map, "You select nothing\n");
       break;
     case QUIT_KEY: /* Quit */
       game_state = ENDING;
@@ -40,6 +40,8 @@ void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
 
   if (dir != NONE) {
     move_entity(wnd, map, entity_list, &entity_list[0], dir);
+  } else {
+    entity_list[0].what_i_am_doing = I_AM_STILL;
   }
   
   return;

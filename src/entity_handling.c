@@ -37,7 +37,7 @@ void report_movement(WINDOW* wnd, const map_s* map, entity_s* entity) {
   }
    /* Build movement message */
   strcpy(msg, entity->who_i_am.name);
-  strcat(msg, " moved ");
+  strcat(msg, movement_str);
   /* Decide direction of movement */
   dy = entity->where_i_am.y - entity->where_i_was.y;
   dx = entity->where_i_am.x - entity->where_i_was.x;
@@ -85,7 +85,6 @@ void validate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s*
       entity->where_i_was = entity->where_i_am; /* Where I am is now where I was */
       entity->where_i_am = entity->where_i_will_be; /* Where I will be is now where I am */
       entity->what_i_am_doing = (dir == WAIT ? I_AM_WAITING : I_AM_MOVING);
-      
       break;
     case WALL: /* Cell type is wall, block movement */
       entity->where_i_will_be = entity->where_i_am; /* Where I am is still where I will be */
