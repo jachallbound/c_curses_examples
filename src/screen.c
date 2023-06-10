@@ -14,10 +14,8 @@ void draw_xy(char c, size_t x, size_t y) {
   return;
 }
 
-void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
+void update_entity_positions(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
   size_t x = 0, y = 0, e = 0;
-  char c = ' ';
-
   for (e = 0; e < entity_count; e++) {
     /* Draw where I am, if display priority is high enough */
     x = entity_list[e].where_i_am.x;
@@ -25,17 +23,23 @@ void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
     if (entity_list[e].what_i_look_like.priority > map->cells[x][y].priority) {
       draw_xy(entity_list[e].what_i_look_like.display, x, y);
     }
-    if (entity_list[e].what_i_am_doing == I_AM_MOVING) {
-      /* If I am moving, then draw floor where I was */
-      x = entity_list[e].where_i_was.x;
-      y = entity_list[e].where_i_was.y;
-      draw_xy(map->cells[x][y].display, x, y);
+    switch (entity_list[e].what_i_am_doing) {
+      case I_AM_MOVING:
+        /* If I am moving, then draw map cell where I was */
+        x = entity_list[e].where_i_was.x;
+        y = entity_list[e].where_i_was.y;
+        draw_xy(map->cells[x][y].display, x, y);
+      case I_AM_WAITING:
+        report_movement(wnd, map, &entity_list[e]);
+        break;
+      default:
+        break;
     }
   }
   return;
 }
 
-state change_map(map_s* map, entity_s* entity_list) {
+state draw_map(map_s* map) { /* , entity_s* entity_list */
   /* Right now, just draw the map */
   size_t x = 0, y = 0;
   
@@ -50,19 +54,20 @@ state change_map(map_s* map, entity_s* entity_list) {
 
 /* Message functions */
 void display_message(WINDOW* wnd, const map_s* map, char* msg) {
-  FILE* f = fopen("userlog.txt", "a");
-  fprintf(f, "%s\n", msg);
-  fclose(f);
-  
-  
+  /* Save message to log file */
+  FILE* userlogfile = fopen(USER_LOG_FILE, "a");
+  fprintf(userlogfile, "%s", msg);
+  fclose(userlogfile);
+  /* Put new message into log */
+  strncpy(msg_log[msg_count++], msg, MAX_MSG_LENGTH);
+  if (msg_count >= MAX_LOG_LENGTH) msg_count = 0;
+  /* Display log */
   size_t m = 0, m_max = 0;
-  strncpy(msg_log[msg_count], msg, MAX_MSG_LENGTH);
-  m_max = (msg_count > Y ? Y : msg_count);
+  m_max = (msg_count > (size_t)Y ? (size_t)Y : msg_count);
   for(m = 0; m < m_max; m++) {
     move(Y-m-1, map->width+2);
-    winsnstr(wnd, msg_log[msg_count-m], MAX_MSG_LENGTH);
+    winsnstr(wnd, msg_log[msg_count-m-1], MAX_MSG_LENGTH);
   }
-  msg_count++;
   return;
 }
 

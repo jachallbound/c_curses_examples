@@ -20,6 +20,7 @@
 
 /* Keyboard Input */
 typedef enum direction {
+  NONE = 0,
   LEFT = LEFT_KEY,
   RIGHT = RIGHT_KEY,
   UP = UP_KEY,
@@ -42,12 +43,14 @@ typedef enum direction {
 #define DOWNRIGHT_STRING "southeast"
 #define WAIT_STRING "nowhere"
 
-/* Map Cells */
-typedef struct position {
-  int x;
-  int y;
-} position;
+/* General description struct */
+typedef struct description {
+  char name[20];
+  char short_description[MAX_MSG_LENGTH/2];
+  char long_description[MAX_MSG_LENGTH*2];
+} description;
 
+/* Map Cells */
 typedef enum celltype {
   UNKNOWN = -1,
   FLOOR = 0,
@@ -73,6 +76,7 @@ typedef struct map_s {
 /* Entities */
 typedef enum entity_action {
   I_AM_STILL,
+  I_AM_WAITING,
   I_AM_MOVING,
   I_AM_INTERACTING,
 } entity_action;
@@ -90,6 +94,7 @@ typedef enum visibility {
 
 typedef struct entity_s {
   entity_type what_i_am;
+  description who_i_am;
   cell what_i_look_like;
   cell where_i_was;
   cell where_i_am;
@@ -102,7 +107,7 @@ typedef struct entity_s {
 typedef enum state {
   ENDING = 0,
   GET_INPUT = 1,
-  CHANGING_MAP = 2,
+  DRAWING_MAP = 2,
   PAUSED = 3,
 } state;
 
