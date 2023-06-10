@@ -1,7 +1,7 @@
 #include "keyboard_input.h"
 
 void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
-  direction dir = NONE;
+  direction dir = WAIT;
   game_state = GET_INPUT;
   switch(*c) {
     case LEFT_KEY: /* LEFT */
@@ -28,6 +28,9 @@ void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
     case DOWNRIGHT_KEY: /* DOWNRIGHT */
       dir = DOWNRIGHT;
       break;
+    case WAIT_KEY: /* DOWNRIGHT */
+      dir = WAIT;
+      break;
     case SELECT_KEY: /* Select */
       display_message(wnd, map, "This is a test\n");
       break;
@@ -35,7 +38,7 @@ void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
       game_state = ENDING;
   }
 
-  if (dir != NONE) {
+  if (dir != WAIT) {
     move_entity(wnd, map, entity_list, &entity_list[0], dir);
   }
   

@@ -9,5 +9,6 @@
 #define DOWNLEFT_KEY 'n'
 #define UPRIGHT_KEY 'i'
 #define DOWNRIGHT_KEY 'm'
+#define WAIT_KEY '.'
 #define SELECT_KEY ' '
 #define QUIT_KEY 'q'

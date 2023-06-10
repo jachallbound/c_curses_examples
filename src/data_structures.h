@@ -3,6 +3,8 @@
 
 #include <ctype.h>
 
+#include "config.h"
+
 /* Macros */
 #define BYTE 1
 #define MAX_X 128
@@ -18,17 +20,27 @@
 
 /* Keyboard Input */
 typedef enum direction {
-  LEFT = 'h',
-  RIGHT = 'l',
-  UP = 'k',
-  DOWN = 'j',
-  UPLEFT = 'y',
-  DOWNLEFT = 'b',
-  UPRIGHT = 'u',
-  DOWNRIGHT = 'n',
-  NONE = '.',
+  LEFT = LEFT_KEY,
+  RIGHT = RIGHT_KEY,
+  UP = UP_KEY,
+  DOWN = DOWN_KEY,
+  UPLEFT = UPLEFT_KEY,
+  DOWNLEFT = DOWNLEFT_KEY,
+  UPRIGHT = UPRIGHT_KEY,
+  DOWNRIGHT = DOWNRIGHT_KEY,
+  WAIT = WAIT_KEY,
 } direction;
 
+/* Define direction strings */
+#define LEFT_STRING "west"
+#define RIGHT_STRING "east"
+#define UP_STRING "north"
+#define DOWN_STRING "south"
+#define UPLEFT_STRING "northwest"
+#define DOWNLEFT_STRING "southwest"
+#define UPRIGHT_STRING "northeast"
+#define DOWNRIGHT_STRING "southeast"
+#define WAIT_STRING "nowhere"
 
 /* Map Cells */
 typedef struct position {
@@ -94,13 +106,12 @@ typedef enum state {
   PAUSED = 3,
 } state;
 
-
-
 /* Global */
 extern int X, Y;
 extern state game_state;
 extern size_t new_entity_index, entity_count;
-extern char msg_log[MAX_MSG_LENGTH][MAX_LOG_LENGTH];
+extern char msg_log[MAX_LOG_LENGTH][MAX_MSG_LENGTH];
 extern size_t msg_count;
+extern size_t rep_msg_count;
 
 #endif /* DATA_STRUCTURES_H */
