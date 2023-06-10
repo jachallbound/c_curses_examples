@@ -9,7 +9,7 @@ void add_entity(entity_s* entity_list, entity_s* new_entity) {
 }
 
 void entity_interaction(WINDOW* wnd, map_s* map, entity_s* entity_0, entity_s* entity_1) {
-  char msg[128];
+  char msg[MAX_MSG_LENGTH];
   char c0[2]; c0[0] = entity_0->what_i_look_like.display; c0[1] = '\0'; /* I hate C strings */
   char c1[2]; c1[0] = entity_1->what_i_look_like.display; c1[1] = '\0';
   char interact_str[] = " interacts with ";
@@ -47,12 +47,24 @@ void validate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s*
       entity->where_i_was = entity->where_i_am; /* Where I am is now where I was */
       entity->where_i_am = entity->where_i_will_be; /* Where I will be is now where I am */
       entity->what_i_am_doing = I_AM_MOVING;
+      // report_movement(wnd, map, entity);
       break;
     case WALL: /* Cell type is wall, block movement */
       entity->where_i_will_be = entity->where_i_am; /* Where I am is still where I will be */
       entity->what_i_am_doing = I_AM_STILL;
       break;
   }
+  return;
+}
+
+void report_movement(WINDOW* wnd, map_s* map, entity_s* entity) {
+  // char msg[MAX_MSG_LENGTH];
+  // char c0[2]; c0[0] = entity->what_i_look_like.display; c0[1] = '\0'; /* I hate C strings */
+  // strcat(msg, c0);
+  // strcat(msg, " moved ");
+  // strcat(msg, "north east");
+  // strcat(msg, "\n");
+  display_message(wnd, map, "broken\n");
   return;
 }
 
@@ -96,38 +108,3 @@ void calculate_movement(WINDOW* wnd, map_s* map, entity_s* entity_list, entity_s
 
   return;
 }
-
-
-
-/* Depricated */
-// void move_char(position* xy, direction dir) {
-//   /* Calculate movement */
-//   position xy_new;
-//   xy_new.x = xy->x;
-//   xy_new.y = xy->y;
-//   calculate_movement(xy, &xy_new, dir);
-
-//   /* Validate movement */
-//   bool movement_is_valid = validate_movement_pos(&xy_new);
-
-//   /* Make movement */
-//   if (movement_is_valid) {
-//     /* Redraw floor where we previously were */
-//     move(xy->y, xy->x);
-//     draw('.');
-//     /* Draw where we are now */
-//     move(xy_new.y, xy_new.x);
-//     draw('@');
-//     /* Update our position */
-//     xy->x = xy_new.x;
-//     xy->y = xy_new.y;
-//   }
-
-//   return;
-// }
-// bool validate_movement_pos(position* xy) {
-//   if ((xy->x > 0 && xy->x < X && xy->y > 0 && xy->y < Y))
-//     return true;
-//   else
-//     return false;
-// }

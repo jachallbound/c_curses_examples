@@ -12,6 +12,9 @@ state game_state = GET_INPUT;
 int X = 0, Y = 0;
 size_t new_entity_index = 0;
 size_t entity_count = 0;
+size_t msg_count = 0;
+char msg_log[MAX_MSG_LENGTH][MAX_LOG_LENGTH];
+
 
 /* Define possible map names */
 /* I don't like this, but I dislike C strings even more */
@@ -29,16 +32,17 @@ int main(void /* int argc, char** argv */) {
   clear(); /* curses call to clear screen, send cursor to position (0,0) */
   refresh(); /* curses call to implement all changes since last refresh */
   curs_set(0);
-
-  int term_X = 0, term_Y = 0;
   char c;
+
+  /* Initialize message log */
+  for(int XL = 0; XL < MAX_MSG_LENGTH; XL++) {
+    for(int YL = 0; YL < MAX_LOG_LENGTH; YL++) {
+      msg_log[XL][YL] = ' ';
+    }
+  }
   
-  /* Choose play area size */
-  X = 21;
-  Y = 21;
-  getmaxyx(wnd, term_X, term_Y); /* curses call to find size of terminal window */
-  X = (term_X < X ? term_X : X); /* Reduce X,Y to terminal size if too large */
-  Y = (term_Y < Y ? term_Y : Y);
+  /* Find terminal size */
+  getmaxyx(wnd, Y, X); /* curses call to find size of terminal window */
 
   /* Initialize game data */
   /* Map */
@@ -55,7 +59,7 @@ int main(void /* int argc, char** argv */) {
 
   /* Entities */
   entity_s entity_list[MAX_ENTITIES];
-  /* Generature player character */
+  /* Generature some entities */
   entity_s pc = {
     .what_i_am = PC,
     .what_i_look_like = {
@@ -95,7 +99,7 @@ int main(void /* int argc, char** argv */) {
     .where_i_will_be = map.cells[map.width/4][map.height/4],
     .what_i_am_doing = I_AM_STILL,
   };
-  /* Add player character to entity list */
+  /* Add entities to entity list */
   add_entity(entity_list, &pc);
   add_entity(entity_list, &pc1);
   add_entity(entity_list, &pc2);
@@ -124,16 +128,3 @@ int main(void /* int argc, char** argv */) {
   endwin();
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-  /* Old, Draw play area and set cursor to 1,1 */
-  // draw_play_area(X, Y);

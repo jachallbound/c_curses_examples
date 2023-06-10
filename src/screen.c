@@ -1,5 +1,6 @@
 #include "screen.h"
 
+/* Map functions */
 void draw(char c) {
   delch();
   insch(c);
@@ -34,13 +35,6 @@ void update_map(WINDOW* wnd, const map_s* map, entity_s* entity_list) {
   return;
 }
 
-void display_message(WINDOW* wnd, const map_s* map, char* msg) {
-  int buf_len = 1024;
-  move(map->height/2, map->width+2);
-  winsnstr(wnd, msg, buf_len);
-  return;
-}
-
 state change_map(map_s* map, entity_s* entity_list) {
   /* Right now, just draw the map */
   size_t x = 0, y = 0;
@@ -54,30 +48,17 @@ state change_map(map_s* map, entity_s* entity_list) {
   return GET_INPUT;
 }
 
-/* Depricated */
-void draw_play_area(int X, int Y) {
-  int x = 0, y = 0;
-  char c;
-  /* Draw walls of play area */
-  move(0, 0);
-  for (y = 0; y <= Y; y++) {
-    for (x = 0; x <= X; x++) {
-      if (y == 0 || y == Y) {
-        c = '=';
-      }
-      else if (x == 0 || x == X) {
-        c = '|';
-      }
-      else {
-        c = '.';
-      }
-      move(y, x);
-      draw(c);
-    }
+/* Message functions */
+void display_message(WINDOW* wnd, const map_s* map, char* msg) {
+  size_t m = 0, m_max = 0;
+  
+  strncpy(msg_log[msg_count], msg, MAX_MSG_LENGTH);
+  m_max = (msg_count > Y ? Y : msg_count);
+  for(m = 0; m < m_max; m++) {
+    move(Y-m-1, map->width+2);
+    winsnstr(wnd, msg_log[msg_count-m], MAX_MSG_LENGTH);
   }
-  /* Reset position within walls we just drew */
-  move(1, 1);
-
+  msg_count++;
   return;
 }
 

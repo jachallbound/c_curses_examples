@@ -10,6 +10,8 @@
 #define MAX_MAP_SIZE MAX_X*MAX_Y
 #define MAX_ENTITIES 1024
 #define COMPARE_XY(e0,e1) (e0.x == e1.x && e0.y == e1.y)
+#define MAX_MSG_LENGTH 128
+#define MAX_LOG_LENGTH 1024
 
 /* Definitions */
 
@@ -98,5 +100,7 @@ typedef enum state {
 extern int X, Y;
 extern state game_state;
 extern size_t new_entity_index, entity_count;
+extern char msg_log[MAX_MSG_LENGTH][MAX_LOG_LENGTH];
+extern size_t msg_count;
 
 #endif /* DATA_STRUCTURES_H */
