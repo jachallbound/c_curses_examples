@@ -1,7 +1,7 @@
 #include "keyboard_input.h"
 
 void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
-  direction dir = WAIT;
+  direction dir = NONE;
   game_state = GET_INPUT;
   switch(*c) {
     case LEFT_KEY: /* LEFT */
@@ -38,7 +38,7 @@ void handle_input(WINDOW* wnd, map_s* map, entity_s* entity_list, char* c) {
       game_state = ENDING;
   }
 
-  if (dir != WAIT) {
+  if (dir != NONE) {
     move_entity(wnd, map, entity_list, &entity_list[0], dir);
   }
   

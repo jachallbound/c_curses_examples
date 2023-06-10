@@ -34,12 +34,9 @@ int main(void /* int argc, char** argv */) {
   curs_set(0);
   char c;
 
-  // /* Initialize message log */
-  // for(int XL = 0; XL < MAX_MSG_LENGTH; XL++) {
-  //   for(int YL = 0; YL < MAX_LOG_LENGTH; YL++) {
-  //     msg_log[XL][YL] = ' ';
-  //   }
-  // }
+  /* Clear log file */
+  FILE* userlogfile = fopen(USER_LOG_FILE, "w");
+  fclose(userlogfile);
   
   /* Find terminal size */
   getmaxyx(wnd, Y, X); /* curses call to find size of terminal window */
@@ -55,13 +52,14 @@ int main(void /* int argc, char** argv */) {
   /* Load map from file and set state */
   load_map_characters(MAP00, map_characters);
   convert_map_to_cells(map_characters, &map);
-  game_state = CHANGING_MAP;
+  game_state = DRAWING_MAP;
 
   /* Entities */
   entity_s entity_list[MAX_ENTITIES];
   /* Generature some entities */
   entity_s pc = {
     .what_i_am = PC,
+    .who_i_am.name = "You",
     .what_i_look_like = {
       .CELL_TYPE = ENTITY,
       .display = '@',
@@ -74,7 +72,8 @@ int main(void /* int argc, char** argv */) {
     .what_i_am_doing = I_AM_STILL,
   };
   entity_s pc1 = {
-    .what_i_am = PC,
+    .what_i_am = NPC,
+    .who_i_am.name = "Wicked one",
     .what_i_look_like = {
       .CELL_TYPE = ENTITY,
       .display = 'V',
@@ -87,7 +86,8 @@ int main(void /* int argc, char** argv */) {
     .what_i_am_doing = I_AM_STILL,
   };
   entity_s pc2 = {
-    .what_i_am = PC,
+    .what_i_am = NPC,
+    .who_i_am.name = "Sacristan",
     .what_i_look_like = {
       .CELL_TYPE = ENTITY,
       .display = 'S',
@@ -116,12 +116,12 @@ int main(void /* int argc, char** argv */) {
         c = getch();
         handle_input(wnd, &map, entity_list, &c);
         break;
-      case CHANGING_MAP:
-        /* Change map */
-        game_state = change_map(&map, entity_list);
+      case DRAWING_MAP:
+        /* Draw map */
+        game_state = draw_map(&map);
         break;
     }
-    update_map(wnd, &map, entity_list);
+    update_entity_positions(wnd, &map, entity_list);
   } while(game_state);
 
   /* Close curses */

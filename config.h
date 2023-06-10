@@ -12,3 +12,6 @@
 #define WAIT_KEY '.'
 #define SELECT_KEY ' '
 #define QUIT_KEY 'q'
+
+/* Message log file */
+#define USER_LOG_FILE "userlog.txt"
